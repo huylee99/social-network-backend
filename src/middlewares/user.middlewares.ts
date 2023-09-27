@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
 const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
-	console.log(req.body);
-
 	const { email, password } = req.body;
 
 	if (!email || !password) {
@@ -10,6 +8,7 @@ const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
 			message: "Email and password are required",
 		});
 	}
+
 	next();
 };
 
