@@ -18,23 +18,26 @@ const userController = (req: Request, res: Response) => {
 };
 
 const registerController = async (req: Request, res: Response) => {
-	const { email, password } = req.body;
-
-	if (!email || !password) {
-		throw new Error("Email and password are required");
-	}
-
-	if (typeof email !== "string" || typeof password !== "string") {
-		throw new Error("Email and password must be string");
-	}
+	const { email, password, username, date_of_birth } = req.body;
 
 	try {
+		const existedEmail = await db.users.findOne({
+			$or: [{ email }, { username }],
+		});
+
+		if (existedEmail) {
+			return res.status(400).json({
+				error: "Email or username already existed",
+			});
+		}
+
 		const user = await db.users.insertOne(
-			new User({ email, password, _id: new ObjectId(), date_of_birth: new Date(), username: "abc" }),
+			new User({ email, password, _id: new ObjectId(), date_of_birth, username }),
 		);
 
 		return res.json({
 			message: "Register success",
+			result: user,
 		});
 	} catch (error) {
 		console.log(error);
