@@ -10,4 +10,13 @@ export const UserSchema = object({
 	]),
 });
 
+export const LoginSchema = object({
+	email: string("Your email must be a string", [emailValidator("Email is invalid")]),
+	password: string([
+		minLength(1, "Please enter your password"),
+		minLength(6, "Password must be at least 6 characters"),
+	]),
+});
+
 export type UserRequestBody = Input<typeof UserSchema>;
+export type LoginRequestBody = Input<typeof LoginSchema>;
